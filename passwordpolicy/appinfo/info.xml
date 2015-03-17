@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<info>
+    <id>passwordpolicy</id>
+    <name>Password Policy</name>
+    <description>Password Policy Enforcement App</description>
+    <licence>AGPL</licence>
+    <author>Nick Booth</author>
+    <version>2.0.0</version>
+    <namespace>PasswordPolicy</namespace>
+    <category>other</category>
+    <dependencies>
+        <owncloud min-version="8" />
+    </dependencies>
+</info>
