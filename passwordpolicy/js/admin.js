@@ -16,9 +16,9 @@ $('#save_password_policy').live('click',function(){
 	data: JSON.stringify(passwordpolicy)
     }).done(function (response) {
 	// handle success
-	$('#save_password_policy_status').html("Policy updated.");
+	$('#save_password_policy_status').html(t('passwordpolicy','Policy updated.'));
     }).fail(function (response, code) {
 	// handle failure
-	$('#save_password_policy_status').html("Policy update failed.");
+	$('#save_password_policy_status').html(t('passwordpolicy','Policy update failed.'));
     });
 });
