@@ -22,14 +22,14 @@ class PasswordPolicyController extends Controller {
 
 	if(strlen($password) < intval($this->service->getAppValue('minlength')))
 	{
-	    $error = "Password is too short. ";
+	    $error = \OC_L10N::get('passwordpolicy')->t('Password is too short. ');
 	}
 	
 	if($this->service->getAppValue('hasnumbers') == "true")
 	{
 	    if(preg_match("/[0-9]/",$password)!=1)
 	    {
-		$error .= "Password does not contain numbers. ";
+		$error .= \OC_L10N::get('passwordpolicy')->t('Password does not contain numbers. ');
 	    }
 	}
 
@@ -38,7 +38,7 @@ class PasswordPolicyController extends Controller {
 	    $specialcharslist = $this->service->getAppValue('specialcharslist');
 	    if(!checkSpecialChars($specialcharslist, $password))
 	    {
-		$error .= "Password does not contain special characters. ";
+		$error .= \OC_L10N::get('passwordpolicy')->t('Password does not contain special characters. ');
 	    }
 	}
 	
@@ -46,14 +46,15 @@ class PasswordPolicyController extends Controller {
 	{
 	    if(!checkMixedCase($password))
 	    {
-		$error .= "Password does not contain upper and lower case characters.";
+		$error .= \OC_L10N::get('passwordpolicy')->t('Password does not contain upper and lower case characters.');
 	    }
 	}
 
 	
 	if(isset($error))
 	{
-	    $response = array('status' => "Failure", 'data' => array('message'=>"Password does not conform to the Password Policy. [".$error."]"));
+            $errormsg = \OC_L10N::get('passwordpolicy')->t('Password does not conform to the Password Policy. [%s]', [ $error ]);
+	    $response = array('status' => "Failure", 'data' => array('message'=>"$errormsg"));
 	}
 	
 	return $response;
