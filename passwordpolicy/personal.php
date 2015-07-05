@@ -14,19 +14,10 @@ $hasnumbers = $service->getAppValue('hasnumbers');
 $hasspecialchars = $service->getAppValue('hasspecialchars');
 $specialcharslist = $service->getAppValue('specialcharslist');
 
-if($hasmixedcase == "true")
-{
-	$tpl->assign('mixedcase',"Must contain UPPER and lower case characters.");
-}
-if($hasnumbers == "true")
-{
-	$tpl->assign('numbers',"Must contain numbers.");
-}
-if($hasspecialchars == "true")
-{
-	$tpl->assign('specialcharslist',"Must contain special characters: ".$specialcharslist);
-}
-
+$tpl->assign('mixedcase',$hasmixedcase);
+$tpl->assign('numbers',$hasnumbers);
+$tpl->assign('specialchars',$hasspecialchars);
+$tpl->assign('specialcharslist',$specialcharslist);
 $tpl->assign('minlength', $minlength);
 
 
