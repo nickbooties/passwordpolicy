@@ -19,10 +19,11 @@ class PasswordPolicyController extends Controller {
     
     public function validatepassword($password){
 	$response = array();
+        $error = '';
 
 	if(strlen($password) < intval($this->service->getAppValue('minlength')))
 	{
-	    $error = \OC_L10N::get('passwordpolicy')->t('Password is too short. ');
+	    $error .= \OC_L10N::get('passwordpolicy')->t('Password is too short. ');
 	}
 	
 	if($this->service->getAppValue('hasnumbers') == "true")
@@ -51,7 +52,7 @@ class PasswordPolicyController extends Controller {
 	}
 
 	
-	if(isset($error))
+	if(!empty($error))
 	{
             $errormsg = \OC_L10N::get('passwordpolicy')->t('Password does not conform to the Password Policy. [%s]', [ $error ]);
 	    $response = array('status' => "Failure", 'data' => array('message'=>"$errormsg"));
