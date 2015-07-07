@@ -7,18 +7,19 @@ class PasswordPolicyHooks {
 
     private $userManager;
 
-    public function __construct($userManager){
+    public function __construct($userManager, \OCP\IRequest $request){
         $this->userManager = $userManager;
+        $this->Request = $request;
     }
 
     public function register() {
         $callback = function( $user, $password, $recoverPassword) {
 		// your code that executes before password is changed
-		$passwordpolicy = new PasswordPolicyController('passwordpolicy');
+		$passwordpolicy = new PasswordPolicyController('passwordpolicy', $this->Request);
 		    
 		$response = $passwordpolicy->validatepassword($password);
 		    
-		if($response['status'] == 'Failure')
+		if(isset($response['status']) && $response['status'] == 'Failure')
 		{
 			header('Content-Type: application/json');
 			echo json_encode($response);
