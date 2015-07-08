@@ -15,6 +15,7 @@ class PasswordPolicyController extends Controller {
 		
 	$ocConfig = \OC::$server->getConfig();
 	$this->service = new PasswordPolicyService($ocConfig,'passwordpolicy');
+	$this->request = $request;
     }
     
     public function validatepassword($password){
@@ -55,7 +56,11 @@ class PasswordPolicyController extends Controller {
 	if(!empty($error))
 	{
             $errormsg = \OC_L10N::get('passwordpolicy')->t('Password does not conform to the Password Policy. [%s]', [ $error ]);
-	    $response = array('status' => "Failure", 'data' => array('message'=>"$errormsg"));
+	    if($this->request->server['PATH_INFO'] == "/settings/personal/changepassword"){
+		$response = array('status' => "Failure", 'data' => array('message'=>"$errormsg"));
+	    } else {
+		$response = array('status' => "Failure", 'msg' => "$errormsg");
+	    }
 	}
 	
 	return $response;
