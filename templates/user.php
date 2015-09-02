@@ -7,17 +7,17 @@
 	
 	<ul style="list-style: circle; margin-left: 20px;">
 		
-		<?php if(isset($_['mixedcase']) && $_['mixedcase'] == "true"){
+		<?php if(isset($_['mixedcase']) && $_['mixedcase'] === "true"){
 			?><li><?php
 			p($l->t('Must contain UPPER and lower case characters.'));
 			?></li><?php
 		}?>
-		<?php if(isset($_['numbers']) && $_['numbers'] == "true"){
+		<?php if(isset($_['numbers']) && $_['numbers'] === "true"){
 			?><li><?php
 			p($l->t('Must contain numbers.'));
 			?></li><?php
 		}?>
-		<?php if(isset($_['specialchars']) && $_['specialchars'] == "true"){
+		<?php if(isset($_['specialchars']) && $_['specialchars'] === "true"){
 			?><li><?php
 			p($l->t('Must contain special characters: %s', [ $_['specialcharslist'] ]));
 			?></li><?php
