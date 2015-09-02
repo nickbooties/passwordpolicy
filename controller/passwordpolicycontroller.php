@@ -10,12 +10,13 @@ class PasswordPolicyController extends Controller {
 
     private $service;
 
-    public function __construct($AppName, IRequest $request){
+    public function __construct($AppName, IRequest $request, \OCP\IL10N $trans){
 	parent::__construct($AppName, $request);
 		
 	$ocConfig = \OC::$server->getConfig();
 	$this->service = new PasswordPolicyService($ocConfig,'passwordpolicy');
 	$this->request = $request;
+        $this->trans = $trans;
     }
     
     public function validatepassword($password){
@@ -24,39 +25,39 @@ class PasswordPolicyController extends Controller {
 
 	if(strlen($password) < intval($this->service->getAppValue('minlength')))
 	{
-	    $error .= \OC_L10N::get('passwordpolicy')->t('Password is too short. ');
+	    $error .= $this->trans->t('Password is too short. ');
 	}
 	
-	if($this->service->getAppValue('hasnumbers') == "true")
+	if($this->service->getAppValue('hasnumbers') === "true")
 	{
-	    if(preg_match("/[0-9]/",$password)!=1)
+	    if(preg_match("/[0-9]/",$password)!==1)
 	    {
-		$error .= \OC_L10N::get('passwordpolicy')->t('Password does not contain numbers. ');
+		$error .= $this->trans->t('Password does not contain numbers. ');
 	    }
 	}
 
-	if($this->service->getAppValue('hasspecialchars') == "true")
+	if($this->service->getAppValue('hasspecialchars') === "true")
 	{
 	    $specialcharslist = $this->service->getAppValue('specialcharslist');
 	    if(!checkSpecialChars($specialcharslist, $password))
 	    {
-		$error .= \OC_L10N::get('passwordpolicy')->t('Password does not contain special characters. ');
+		$error .= $this->trans->t('Password does not contain special characters. ');
 	    }
 	}
 	
-	if($this->service->getAppValue('hasmixedcase') == "true")
+	if($this->service->getAppValue('hasmixedcase') === "true")
 	{
 	    if(!checkMixedCase($password))
 	    {
-		$error .= \OC_L10N::get('passwordpolicy')->t('Password does not contain upper and lower case characters.');
+		$error .= $this->trans->t('Password does not contain upper and lower case characters.');
 	    }
 	}
 
 	
 	if(!empty($error))
 	{
-            $errormsg = \OC_L10N::get('passwordpolicy')->t('Password does not conform to the Password Policy. [%s]', [ $error ]);
-	    if($this->request->server['PATH_INFO'] == "/settings/personal/changepassword"){
+            $errormsg = $this->trans->t('Password does not conform to the Password Policy. [%s]', [ $error ]);
+	    if($this->request->server['PATH_INFO'] === "/settings/personal/changepassword"){
 		$response = array('status' => "Failure", 'data' => array('message'=>"$errormsg"));
 	    } else {
 		$response = array('status' => "Failure", 'msg' => "$errormsg");
@@ -70,9 +71,9 @@ class PasswordPolicyController extends Controller {
     {
 	\OCP\User::checkAdminUser();
 	
-	$hasspecialchars = $hasspecialchars==0?"false":"true";
-	$hasmixedcase = $hasmixedcase==0?"false":"true";
-	$hasnumbers = $hasnumbers==0?"false":"true";
+	$hasspecialchars = $hasspecialchars===false?"false":"true";
+	$hasmixedcase = $hasmixedcase===false?"false":"true";
+	$hasnumbers = $hasnumbers===false?"false":"true";
 	
 	$this->service->setAppValue('minlength', $minlength);
 	$this->service->setAppValue('hasmixedcase', $hasmixedcase);
@@ -99,7 +100,7 @@ function checkSpecialChars($special, $input)
 
 function checkMixedCase($input)
 {
-        if(strtoupper($input) == $input || strtolower($input) == $input)
+        if(strtoupper($input) === $input || strtolower($input) === $input)
                 return false;
         else
                 return true;
