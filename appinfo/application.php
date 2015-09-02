@@ -17,8 +17,14 @@ class Application extends App {
         $container->registerService('PasswordPolicyHooks', function($c) {
             return new PasswordPolicyHooks(
 		$c->query('ServerContainer')->getUserSession(),
-                $c->query('Request')
+                $c->query('Request'),
+                $c->query('L10N')
             );
         });
+
+        $container->registerService('L10N', function($c) {
+            return $c->query('ServerContainer')->getL10N($c->query('AppName'));
+        });
+
     }
 }
