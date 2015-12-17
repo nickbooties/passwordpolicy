@@ -56,11 +56,12 @@ class PasswordPolicyController extends Controller {
 	if(!empty($error))
 	{
             $errormsg = \OC_L10N::get('passwordpolicy')->t('Password does not conform to the Password Policy. [%s]', [ $error ]);
-	    if($this->request->server['PATH_INFO'] == "/settings/personal/changepassword"){
-		$response = array('status' => "Failure", 'data' => array('message'=>"$errormsg"));
-	    } else {
-		$response = array('status' => "Failure", 'msg' => "$errormsg");
-	    }
+            $lostpassword = "/lostpassword/set/";
+            if(substr($this->request->server['PATH_INFO'],0,strlen($lostpassword)) === $lostpassword){
+            	$response = array('status' => "Failure", 'msg' => "$errormsg");
+            } else {
+            	$response = array('status' => "Failure", 'data' => array('message'=>"$errormsg"));
+            }
 	}
 	
 	return $response;
