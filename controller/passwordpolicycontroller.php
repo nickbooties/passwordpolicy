@@ -61,13 +61,13 @@ class PasswordPolicyController extends Controller {
 	
 	if(!empty($error))
 	{
-		$errormsg = $this->trans->t('Password does not conform to the Password Policy. [%s]', [ $error ]);
-		$lostpassword = "/lostpassword/set/";
-		if(substr($this->request->server['PATH_INFO'],0,strlen($lostpassword)) === $lostpassword){
-			$response = array('status' => "Failure", 'msg' => "$errormsg");
-		} else {
-			$response = array('status' => "Failure", 'data' => array('message'=>"$errormsg"));
-		}
+	    $errormsg = $this->trans->t('Password does not conform to the Password Policy. [%s]', [ $error ]);
+	    $lostpassword = "/lostpassword/set/";
+	    if(substr($this->request->server['PATH_INFO'],0,strlen($lostpassword)) === $lostpassword){
+		$response = array('status' => "Failure", 'msg' => "$errormsg");
+	    } else {
+		$response = array('status' => "Failure", 'data' => array('message'=>"$errormsg"));
+	    }
 	}
 	
 	return $response;
