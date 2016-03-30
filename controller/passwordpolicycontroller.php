@@ -65,6 +65,8 @@ class PasswordPolicyController extends Controller {
 	    $lostpassword = "/lostpassword/set/";
 	    if(substr($this->request->server['PATH_INFO'],0,strlen($lostpassword)) === $lostpassword){
 		$response = array('status' => "Failure", 'msg' => "$errormsg");
+	    } elseif ($this->request->server['PATH_INFO'] === "/settings/users/users" ) {
+		$response = array('status' => "Failure", 'message'=>"$errormsg");
 	    } else {
 		$response = array('status' => "Failure", 'data' => array('message'=>"$errormsg"));
 	    }
