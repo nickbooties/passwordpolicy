@@ -3,6 +3,7 @@ namespace OCA\PasswordPolicy\Hooks;
 use OCA\PasswordPolicy\Controller;
 use OCA\PasswordPolicy\Controller\PasswordPolicyController;
 use \OCP\IL10N;
+use \OCP\AppFramework\Http;
 
 class PasswordPolicyHooks {
 
@@ -15,20 +16,33 @@ class PasswordPolicyHooks {
     }
 
     public function register() {
-        $callback = function( $user, $password, $recoverPassword) {
-		// your code that executes before password is changed
-		$passwordpolicy = new PasswordPolicyController('passwordpolicy', $this->Request, $this->trans);
-		    
-		$response = $passwordpolicy->validatepassword($password);
-		    
-		if(isset($response['status']) && $response['status'] == 'Failure')
-		{
-			header('Content-Type: application/json');
-			echo json_encode($response);
-			exit();
-		}
-        };
-        $this->userManager->listen('\OC\User', 'preSetPassword', $callback);
+	$callbackPreSetPassword = function( $user, $password, $recoverPassword) {
+	    $passwordpolicy = new PasswordPolicyController('passwordpolicy', $this->Request, $this->trans);
+
+	    $response = $passwordpolicy->validatepassword($password);
+
+	    if(isset($response['status']) && $response['status'] == 'Failure') {
+		header('Content-Type: application/json');
+		echo json_encode($response);
+		exit();
+	    }
+	};
+	$this->userManager->listen('\OC\User', 'preSetPassword', $callbackPreSetPassword);
+
+	$callbackPreCreateUser = function($user, $password) {
+	    $passwordpolicy = new PasswordPolicyController('passwordpolicy', $this->Request, $this->trans);
+
+	    $response = $passwordpolicy->validatepassword($password);
+
+	    if(isset($response['status']) && $response['status'] == 'Failure') {
+		header('Content-Type: application/json');
+		http_response_code(Http::STATUS_BAD_REQUEST);
+		echo json_encode($response);
+		exit();
+	    }
+	};
+	$this->userManager->listen('\OC\User', 'preCreateUser', $callbackPreCreateUser);
+
     }
 
 }
