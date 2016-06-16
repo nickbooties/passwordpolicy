@@ -62,10 +62,9 @@ class PasswordPolicyController extends Controller {
 	if(!empty($error))
 	{
 	    $errormsg = $this->trans->t('Password does not conform to the Password Policy. [%s]', [ $error ]);
-	    $lostpassword = "/lostpassword/set/";
-	    if(substr($this->request->server['PATH_INFO'],0,strlen($lostpassword)) === $lostpassword){
+	    if($this->request->parameters['_route'] === "core.lost.setPassword"){
 		$response = array('status' => "Failure", 'msg' => "$errormsg");
-	    } elseif ($this->request->server['PATH_INFO'] === "/settings/users/users" ) {
+	    } elseif ($this->request->parameters['_route'] === "settings.users.create") {
 		$response = array('status' => "Failure", 'message'=>"$errormsg");
 	    } else {
 		$response = array('status' => "Failure", 'data' => array('message'=>"$errormsg"));
